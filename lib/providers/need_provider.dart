@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/need.dart';
+import '../models/impact_zone.dart';
 import '../services/recommendation_engine.dart';
 import '../services/gemini_service.dart';
 import '../services/supabase_service.dart';
@@ -9,6 +10,7 @@ class NeedProvider with ChangeNotifier {
   final GeminiService _geminiService = GeminiService();
   final SupabaseService _supabaseService = SupabaseService();
   List<Need> _needs = [];
+  List<ImpactZone> _zones = SampleData.sampleZones; // Initialize with sample data for demo
   bool _isLoading = true;
 
   NeedProvider() {
@@ -18,6 +20,8 @@ class NeedProvider with ChangeNotifier {
   List<Need> get needs {
     return RecommendationEngine.getRecommendedNeeds(_needs);
   }
+
+  List<ImpactZone> get zones => _zones;
 
   bool get isLoading => _isLoading;
 

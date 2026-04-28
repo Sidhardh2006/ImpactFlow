@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../providers/need_provider.dart';
 import '../models/need.dart';
+import '../models/impact_zone.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -34,6 +35,8 @@ class _MapScreenState extends State<MapScreen> {
                 ),
                 // "Scanning" Effect
                 _buildScanningEffect(),
+                // Impact Zones
+                ...provider.zones.map((zone) => _buildImpactZone(context, zone)),
                 // Mock Markers
                 ...needs.map((need) => _buildMockMarker(context, need)),
                 // Legend
@@ -72,10 +75,11 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Widget _buildMockMarker(BuildContext context, Need need) {
-    // Map GPS to relative screen coordinates for simulation
-    // We'll use a simple offset from the center
-    final double relX = (need.longitude - 80.5165) * 5000 + MediaQuery.of(context).size.width / 2;
-    final double relY = -(need.latitude - 16.5131) * 5000 + MediaQuery.of(context).size.height / 2;
+    // Map GPS to relative screen coordinates for simulation (Centered on Mumbai)
+    const double centerLng = 72.8777;
+    const double centerLat = 19.0760;
+    final double relX = (need.longitude - centerLng) * 8000 + MediaQuery.of(context).size.width / 2;
+    final double relY = -(need.latitude - centerLat) * 8000 + MediaQuery.of(context).size.height / 2;
 
     final Color color = _getPriorityColor(need.priorityScore);
 
@@ -115,6 +119,29 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  Widget _buildImpactZone(BuildContext context, ImpactZone zone) {
+    const double centerLng = 72.8777;
+    const double centerLat = 19.0760;
+    final double relX = (zone.centerLongitude - centerLng) * 8000 + MediaQuery.of(context).size.width / 2;
+    final double relY = -(zone.centerLatitude - centerLat) * 8000 + MediaQuery.of(context).size.height / 2;
+
+    final double screenRadius = zone.radius * 8000;
+
+    return Positioned(
+      left: relX - screenRadius,
+      top: relY - screenRadius,
+      child: Container(
+        width: screenRadius * 2,
+        height: screenRadius * 2,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: zone.color.withOpacity(0.15),
+          border: Border.all(color: zone.color.withOpacity(0.3), width: 1),
+        ),
+      ),
+    );
+  }
+
   Widget _buildLegend() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -129,6 +156,10 @@ class _MapScreenState extends State<MapScreen> {
           _legendItem('High Urgency', Colors.redAccent),
           _legendItem('Medium Urgency', Colors.orangeAccent),
           _legendItem('Standard', Colors.greenAccent),
+          const Divider(color: Colors.white10),
+          _legendItem('Critical Zone', Colors.red.withOpacity(0.3)),
+          _legendItem('Moderate Zone', Colors.orange.withOpacity(0.3)),
+          _legendItem('Safe Hub', Colors.green.withOpacity(0.3)),
         ],
       ),
     );

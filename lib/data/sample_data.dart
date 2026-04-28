@@ -1,4 +1,5 @@
 import '../models/need.dart';
+import '../models/impact_zone.dart';
 
 class SampleData {
   static List<Need> get sampleNeeds => [
@@ -92,6 +93,33 @@ class SampleData {
       timestamp: DateTime.now().subtract(const Duration(hours: 24)),
       category: 'Infrastructure',
       isAiVerified: false,
+    ),
+  ];
+
+  static List<ImpactZone> get sampleZones => [
+    ImpactZone(
+      id: 'z1',
+      name: 'Central Critical Zone',
+      centerLatitude: 19.0760,
+      centerLongitude: 72.8777,
+      radius: 0.015,
+      intensity: ZoneIntensity.critical,
+    ),
+    ImpactZone(
+      id: 'z2',
+      name: 'East Recovery Zone',
+      centerLatitude: 19.1000,
+      centerLongitude: 72.9000,
+      radius: 0.02,
+      intensity: ZoneIntensity.moderate,
+    ),
+    ImpactZone(
+      id: 'z3',
+      name: 'South Safe Hub',
+      centerLatitude: 19.0600,
+      centerLongitude: 72.8600,
+      radius: 0.01,
+      intensity: ZoneIntensity.safe,
     ),
   ];
 }
