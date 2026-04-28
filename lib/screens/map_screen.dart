@@ -84,33 +84,43 @@ class _MapScreenState extends State<MapScreen> {
     final Color color = _getPriorityColor(need.priorityScore);
 
     return Positioned(
-      left: relX.clamp(50, MediaQuery.of(context).size.width - 50),
-      top: relY.clamp(50, MediaQuery.of(context).size.height - 100),
+      left: relX.clamp(20, MediaQuery.of(context).size.width - 20),
+      top: relY.clamp(20, MediaQuery.of(context).size.height - 120),
       child: GestureDetector(
         onTap: () => _showNeedDetails(need),
         child: Column(
           children: [
             Container(
-              width: 12,
-              height: 12,
+              width: 16,
+              height: 16,
               decoration: BoxDecoration(
                 color: color,
                 shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2),
                 boxShadow: [
-                  BoxShadow(color: color.withOpacity(0.5), blurRadius: 10, spreadRadius: 2),
+                  BoxShadow(color: color.withOpacity(0.6), blurRadius: 12, spreadRadius: 4),
                 ],
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              constraints: const BoxConstraints(maxWidth: 120),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(4),
+                color: Colors.black.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: color.withOpacity(0.5), width: 1),
               ),
               child: Text(
                 need.title,
-                style: const TextStyle(color: Colors.white, fontSize: 8),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white, 
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -194,9 +204,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Color _getPriorityColor(int score) {
-    if (score >= 20) return Colors.redAccent;
-    if (score >= 10) return Colors.orangeAccent;
-    return Colors.greenAccent;
+    if (score >= 4) return const Color(0xFFEF4444); // Bright Red
+    if (score >= 3) return const Color(0xFFF59E0B); // Amber
+    return const Color(0xFF10B981); // Emerald Green
   }
 
   void _showNeedDetails(Need need) {
