@@ -23,6 +23,31 @@ class ImpactZone {
     required this.intensity,
   });
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'center_latitude': centerLatitude,
+      'center_longitude': centerLongitude,
+      'radius': radius,
+      'intensity': intensity.name,
+    };
+  }
+
+  factory ImpactZone.fromMap(Map<String, dynamic> map) {
+    return ImpactZone(
+      id: map['id'] ?? '',
+      name: map['name'] ?? '',
+      centerLatitude: (map['center_latitude'] as num?)?.toDouble() ?? 0.0,
+      centerLongitude: (map['center_longitude'] as num?)?.toDouble() ?? 0.0,
+      radius: (map['radius'] as num?)?.toDouble() ?? 0.0,
+      intensity: ZoneIntensity.values.firstWhere(
+        (e) => e.name == map['intensity'],
+        orElse: () => ZoneIntensity.moderate,
+      ),
+    );
+  }
+
   Color get color {
     switch (intensity) {
       case ZoneIntensity.critical:

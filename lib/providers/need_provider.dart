@@ -15,6 +15,7 @@ class NeedProvider with ChangeNotifier {
 
   NeedProvider() {
     _listenToNeeds();
+    _listenToZones();
   }
 
   List<Need> get needs {
@@ -45,6 +46,17 @@ class NeedProvider with ChangeNotifier {
       debugPrint('Supabase Stream Error: $error');
       _isLoading = false;
       notifyListeners();
+    });
+  }
+
+  void _listenToZones() {
+    _supabaseService.zonesStream.listen((updatedZones) {
+      if (updatedZones.isNotEmpty) {
+        _zones = updatedZones;
+      }
+      notifyListeners();
+    }, onError: (error) {
+      debugPrint('Supabase Zones Stream Error: $error');
     });
   }
 

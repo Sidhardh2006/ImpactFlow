@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/need.dart';
+import '../models/impact_zone.dart';
 
 class SupabaseService {
   final _client = Supabase.instance.client;
@@ -11,6 +12,14 @@ class SupabaseService {
         .stream(primaryKey: ['id'])
         .order('timestamp', ascending: false)
         .map((data) => data.map((map) => Need.fromMap(map)).toList());
+  }
+
+  // Stream of impact zones
+  Stream<List<ImpactZone>> get zonesStream {
+    return _client
+        .from('impact_zones')
+        .stream(primaryKey: ['id'])
+        .map((data) => data.map((map) => ImpactZone.fromMap(map)).toList());
   }
 
   // Fetch needs once (initial load)
